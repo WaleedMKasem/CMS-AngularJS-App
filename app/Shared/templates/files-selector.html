@@ -1,0 +1,23 @@
+﻿
+<div>
+    <a href="javascript:" class="btn btn-info" ng-click="openRelatedFiles()">{{title}}</a>
+    <table ng-table="" class="table table-striped" ng-show="files.length">
+        <tbody sv-root sv-part="files">
+            <tr ng-repeat="item in files" sv-element>
+                <td data-title="'م'" >
+                    {{$index+1}}
+                </td>
+                <td data-title="'العنون'" >
+                    {{item.title}}
+                </td>
+                <td data-title="'التاريخ'" >
+                    {{item.publishedOn |date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <button type="button" class="btn btn-xs btn-danger" ng-click="files.splice($index,1)">إلغاء</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+   
+</div>

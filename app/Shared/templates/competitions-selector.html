@@ -1,0 +1,22 @@
+﻿
+<div>
+    <a href="javascript:" class="btn btn-info" ng-click="openRelatedCompetitions()">{{title}}</a>
+    <table ng-table="" class="table table-striped" ng-show="competitions.length">
+        <tbody sv-root sv-part="competitions">
+            <tr ng-repeat="item in competitions" sv-element>
+                <td data-title="'م'">
+                    {{$index+1}}
+                </td>
+                <td data-title="'العنوان'" ng-if="item.competitionName">
+                    {{item.competitionName}}
+                </td>
+                <td data-title="'العنوان'" ng-if="item.name">
+                    {{item.name}}
+                </td>
+                <td>
+                    <button type="button" class="btn btn-xs btn-danger" ng-click="competitions.splice($index,1)">إلغاء</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

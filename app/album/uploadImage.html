@@ -1,0 +1,15 @@
+﻿<div>
+    <label>رفع الصور</label>
+    <div class="btn btn-primary" ngf-select ngf-change="upload($files)" ngf-multiple="true" accept="image/*">اختر الصور</div>
+    <br/>
+</div>
+<div ng-repeat="item in progress track by $index" class="progress" ng-show="item.percentage">
+    <div class="progress-bar progress-bar-striped active progress-bar-info" role="progressbar" aria-valuenow="{{item.percentage}}"
+         aria-valuemin="0" aria-valuemax="100" ng-style="{ width: item.percentage +'%' }">
+        {{item.percentage+'% '+item.fileName}}
+    </div>
+</div>
+<div ng-repeat="item in filesUrls track by $index">
+    <img ng-src="{{item}}" alt="{{item.fileName}}"/>
+
+</div>

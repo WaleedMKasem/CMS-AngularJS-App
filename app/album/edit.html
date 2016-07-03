@@ -1,0 +1,114 @@
+﻿<div ng-show="error" class="alert alert-danger alert-dismissible" role="alert"><p>{{ error }}</p></div>
+<br />
+<div ng-show="success" class="alert alert-success alert-dismissible" role="alert">
+    <p>{{ success }}</p>
+</div>
+<form role="form" name="form" novalidate ng-init="bindData()" ng-submit="save()">
+    <div class="form-group pull-left">
+        <button type="button" class="btn btn-danger" ng-click="album=$storage.album" ng-show="!isEdit&&$storage.album">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            أستعيد أخر مسودة
+        </button>
+        <button type="button" class="btn btn-success" ng-click="clear()" ng-show="album.id">
+            إضافة جديد
+        </button>
+    </div>
+    <tabset>
+        <tab heading="البيانات الأساسية">
+
+            <div class="form-group" ng-class="{ 'has-error' : form.editor.$invalid }">
+                <label for="editor">المحرر</label>
+                <ui-select name="editor" ng-required="true" ng-model="album.editor" theme="bootstrap">
+                    <ui-select-match placeholder="اختر المحرر من القائمة">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="item in editorList | filter: $select.search">
+                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : form.title.$invalid }">
+                <label for="title">العنوان</label>
+                <input type="text" class="form-control" name="title" data-ng-model="album.title" placeholder="العنوان" required>
+                <p ng-show="form.title.$invalid && form.title.$dirty" class="help-block">تأكد من قيمة العنوان.</p>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" data-ng-model="album.isSpecial" name="isSpecial">
+                    ألبوم مميز
+                </label>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : form.summary.$invalid && form.summary.$dirty }">
+                <label for="summary">الملخص</label>
+                <textarea class="form-control" rows="5" name="summary" data-ng-model="album.summary" placeholder="الملخص" required></textarea>
+                <p ng-show="form.summary.$invalid && form.summary.$dirty" class="help-block">تأكد من قيمة الملخص.</p>
+            </div>
+            <div class="form-group">
+                <label for="description">الوصف</label>
+                <textarea class="form-control" rows="5" name="description" data-ng-model="album.description" placeholder="الوصف"></textarea>
+            </div>
+        </tab>
+        <tab heading="الاقسام و الارتباطات">
+
+            <div class="form-group" ng-class="{ 'has-error' : form.parentCategory.$invalid }">
+                <label for="parentCategory">القسم العام</label>
+                <ui-select name="parentCategory" ng-required="true" ng-model="album.parentCategory" theme="bootstrap">
+                    <ui-select-match placeholder="اختر القسم من القائمة">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="item in majorList | filter: $select.search">
+                        <div ng-bind-html="item.title | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : form.category.$invalid }">
+                <label for="category">القسم الرئيسي</label>
+                <ui-select name="category" ng-required="true" ng-model="album.category" theme="bootstrap">
+                    <ui-select-match placeholder="اختر القسم من القائمة">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="item in categoryList | filter: $select.search">
+                        <div ng-bind-html="item.title | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group">
+                <label for="otherCategories">الأقسام المتعلقة</label>
+                <ui-select multiple="true" ng-model="album.otherCategories" theme="bootstrap" ng-disabled="disabled" close-on-select="true" title="ابحث عن الأقسام المتعلقة" style="width: 100%;">
+                    <ui-select-match placeholder="ابحث عن الأقسام المتعلقة">{{$item.title}}</ui-select-match>
+                    <ui-select-choices repeat="item in categoryList | filter: $select.search ">
+                        <div ng-bind-html="item.title | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>   
+            <div class="form-group">
+                <br />
+               <keywords-selector keywords="album.keywords">
+                </keywords-selector>
+            </div>
+            <div class="form-group">
+                <br />
+                <albums-selector albums="album.relatedAlbums" title="'الألبومات المتعلقة بالملف'">
+                </albums-selector>
+            </div>
+            <div class="form-group">
+                <br />
+                <news-selector news="album.relatedNews" title="'الأخبار المتعلقة بالألبوم'">
+                </news-selector>
+            </div>
+</tab>
+        <tab heading="الصور">
+            <div class="form-group">
+                <br />
+                <images-selector images="album.images" title="'صور الألبوم'">
+                </images-selector>
+            </div>
+
+        </tab>
+    </tabset>
+    <button type="submit" class="btn btn-primary" ng-disabled="album.images.length<1|| form.parentCategory.$invalid|| form.category.$invalid ||form.title.$invalid || form.editor.$invalid">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+        حفظ
+    </button>
+    <button type="button" class="btn btn-danger" ng-disabled="album.images.length<1|| form.parentCategory.$invalid|| form.category.$invalid ||form.title.$invalid || form.editor.$invalid " ng-confirm-click="هل انت متأكد من النشر؟" ng-click="publishItem()" ng-show="!album.publishedOn">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+        نشر
+    </button>
+    <a href="#!/albums" class="btn btn-warning">عودة</a>
+</form>
+
+

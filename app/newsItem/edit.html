@@ -1,0 +1,163 @@
+﻿<div ng-show="error" class="alert alert-danger alert-dismissible" role="alert"><p>{{ error }}</p></div>
+<br/>
+<div ng-show="success" class="alert alert-success alert-dismissible" role="alert">
+    <p>{{ success }}</p>
+</div>
+
+<form role="form" name="form" novalidate ng-init="bindData()" ng-submit="save()">
+  
+    <div class="form-group pull-left">
+        <button type="button" class="btn btn-danger" ng-click="newsItem=$storage.news" ng-show="!isEdit&&$storage.news">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            استرجاع أخر مسودة
+        </button>
+        <button type="button" class="btn btn-success" ng-click="clear()" ng-show="newsItem.id">
+            إضافة جديد
+        </button>
+    </div>
+    <tabset>
+        <tab heading="البيانات">
+            <div class="form-group" ng-class="{ 'has-error' : form.editor.$invalid }">
+                <label for="editor">المحرر</label>
+                <ui-select name="editor" ng-required="true" ng-model="newsItem.editor" theme="bootstrap">
+                    <ui-select-match placeholder="اختر المحرر من القائمة">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="item in editorList | filter: $select.search">
+                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <p ng-show="form.editor.$invalid && form.editor.$dirty" class="help-block">تأكد من قيمة النص.</p>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : form.title.$invalid }">
+                <label for="title">العنوان</label>
+                <input type="text" class="form-control" name="title" data-ng-model="newsItem.title" placeholder="العنوان" required>
+                <p ng-show="form.title.$invalid && form.title.$dirty" class="help-block">تأكد من قيمة العنوان.</p>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : form.subtitle.$invalid }">
+                <label for="subtitle"> العنوان الفرعي</label>
+                <input type="text" class="form-control" name="subtitle" data-ng-model="newsItem.subTitle" placeholder="العنوان الفرعي" required>
+                <p ng-show="form.subtitle.$invalid && form.subtitle.$dirty" class="help-block">تأكد من قيمة العنوان الفرعي.</p>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : form.summary.$invalid  }">
+                <label for="summary">الملخص</label>
+                <textarea class="form-control" rows="5" name="summary" data-ng-model="newsItem.summary" placeholder="الملخص" required></textarea>
+                <p ng-show="form.summary.$invalid && form.summary.$dirty" class="help-block">تأكد من قيمة الملخص.</p>
+            </div>
+            <div class="form-group">
+                <label for="entities">تصنيف الخبر</label>
+                <label ng-repeat="item in entities">
+                    <input ng-model="item.checked" type="checkbox" ng-click="updateSelection($index, entities)"/>
+                    {{item.module.title}}&nbsp;&nbsp;&nbsp;
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="label">حـــــالة الخبر</label>
+                <label ng-repeat="item in labels">
+                    <input type="radio" ng-model="newsItem.label" name="name" value="{{item}}" />
+                    {{item}}&nbsp;&nbsp;&nbsp;
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="labels">تثبيـــت الخبر</label>
+                <label>
+                    <input ng-model="newsItem.isFixedAtHome" type="checkbox" /> الرئيسية&nbsp;&nbsp;&nbsp;
+                    <input ng-model="newsItem.isFixedAtParentCategory" type="checkbox" /> القسم العام&nbsp;&nbsp;&nbsp;
+                    <input ng-model="newsItem.isFixedAtCategory" type="checkbox" /> القسم الرئيسي&nbsp;&nbsp;&nbsp;
+                </label>
+            </div>
+            <div class="form-group" ng-show="newsItem.isReport">
+                <label for="newsItem">نقاط الخبر </label>
+                <br/>
+                <a href="javascript:" class="btn btn-success" ng-click="open(newsItem.points.length)">إضافة نقطة</a>
+                <table ng-table="" class="table table-striped" ng-show="newsItem.points.length">
+                    <tr ng-repeat="point in newsItem.points">
+                        <td data-title="'العنوان'">
+                            {{point.title}}
+                        </td>
+                        <td>
+                            <a href="javascript:" ng-click="open($index)"><span class="glyphicon glyphicon-edit"></span> تعديل</a>
+                            <a data-ng-click="deletepiont(newsItem.id,$index)" ng-confirm-click="هل انت متأكد من الحذف؟" href="javascript:;"><span class="glyphicon glyphicon-trash"></span> حذف</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </tab>
+        <tab heading="النص">
+            <div class="form-group" ng-class="{ 'has-error' : form.body.$invalid }">
+                <label for="body">نص الخبر</label>
+                <div text-angular="text-angular" name="body" data-ng-model="newsItem.body" required></div>
+                <p ng-show="form.body.$invalid && form.body.$dirty" class="help-block">تأكد من قيمة النص.</p>
+            </div>
+            <div class="form-group">
+                <label for="embededCode">embeded Code</label>
+                <textarea class="form-control" rows="5" name="embededCode" data-ng-model="newsItem.embededCode" placeholder="embeded Code" required></textarea>
+               
+            </div>
+        </tab>
+        <tab heading="الأرتباطات">
+            <div class="form-group" ng-class="{ 'has-error' : form.parentCategory.$invalid }">
+                <label for="parentCategory">القسم العام</label>
+                <ui-select name="parentCategory" ng-required="true" ng-model="newsItem.parentCategory" theme="bootstrap">
+                    <ui-select-match placeholder="اختر القسم من القائمة">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="item in majorList | filter: $select.search">
+                        <div ng-bind-html="item.title | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : form.category.$invalid }">
+                <label for="category">القسم الرئيسي</label>
+                <ui-select name="category" ng-required="true" ng-model="newsItem.category" theme="bootstrap">
+                    <ui-select-match placeholder="اختر القسم من القائمة">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="item in categoryList | filter: $select.search">
+                        <div ng-bind-html="item.title | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group">
+                <label for="otherCategories">الأقسام المتعلقة</label>
+                <ui-select multiple="true" ng-model="newsItem.otherCategories" theme="bootstrap" ng-disabled="disabled" close-on-select="true" title="ابحث عن الأقسام المتعلقة" style="width: 100%;">
+                    <ui-select-match placeholder="ابحث عن الأقسام المتعلقة">{{$item.title}}</ui-select-match>
+                    <ui-select-choices repeat="item in categoryList | filter: $select.search ">
+                        <div ng-bind-html="item.title | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group">
+                <br/>
+                <keywords-selector keywords="newsItem.keywords">
+                </keywords-selector>
+            </div>
+            <div class="form-group">
+                <br/>
+                <news-selector news="newsItem.relatedNews" title="'الأخبار المتعلقة بالخبر'">
+                </news-selector>
+            </div>
+        </tab>
+        <tab heading="صور/ فيديوهات الخبر">
+            <div class="form-group">
+                <br/>
+                <images-selector images="newsItem.images" title="'صور الخبر'">
+                </images-selector>
+
+                <br/>
+                    <images-selector images="sourceList" single="true" title="'صورة بالمقاس الكامل'" ng-if="newsItem.isInfographic || newsItem.isCartoons">
+                    </images-selector>
+                <br />
+
+                <videos-selector videos="newsItem.videos" title="'فيديوهات الخبر'">
+                </videos-selector>
+            </div>
+        </tab>
+    </tabset>
+    <button type="submit" class="btn btn-primary" ng-disabled=" form.parentCategory.$invalid|| form.category.$invalid || form.editor.$invalid  || form.title.$invalid ||form.body.$invalid || form.summary.$invalid || form.subtitle.$invalid ||!newsItem.images.length ||!newsItem.relatedNews.length">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+        حفظ
+    </button>
+    <button type="button" class="btn btn-danger" ng-disabled="  form.parentCategory.$invalid|| form.category.$invalid || form.title.$invalid || form.editor.$invalid  || form.body.$invalid || form.summary.$invalid ||  form.subtitle.$invalid ||!newsItem.images.length ||!newsItem.relatedNews.length" ng-confirm-click="هل انت متأكد من النشر؟" ng-click="publishItem()" ng-show="!newsItem.publishedOn">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+        نشر
+    </button>
+
+    <a href="#!/news" class="btn btn-warning">عودة</a>
+</form>
+
+

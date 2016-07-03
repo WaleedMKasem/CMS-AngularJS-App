@@ -1,0 +1,56 @@
+﻿
+<div>
+    <a href="javascript:" class="btn btn-info" ng-click="openRelatedImages()">{{title}}</a>
+
+    <table ng-table="" class="table" ng-show="images.length">
+        <tr ng-repeat="item in images as items" ng-switch on="$index % 3">
+            <td ng-switch-when="0">
+
+                <img alt="{{items[$index].title}}" ng-src="{{getImageUrl(items[$index].imageId,items[$index].encryptedImageId)}}" />
+                <br />
+                {{items[$index].title}}
+                <br />
+                <button ng-show="!single" type="button" class="btn btn-xs btn-danger" ng-click="images.splice($index,1)">إلغاء</button>
+                &nbsp;
+                <label >
+                    <input ng-model="items[$index].hasDescription" type="checkbox" />
+                    وصف الصورة
+                </label>
+                <br />
+                <div class="form-group" ng-show="items[$index].hasDescription" style="width: 41%">
+                    <textarea class="form-control" rows="3" name="description" data-ng-model="items[$index].description" placeholder="وصف" required></textarea>
+                </div>
+            </td>
+            <td ng-if="items[$index+1]" ng-switch-when="0">
+                <img alt="{{items[$index+1].title}}" ng-src="{{getImageUrl(items[$index+1].imageId,items[$index+1].encryptedImageId)}}" />
+                <br />
+                {{items[$index+1].title}}
+                <br />
+                <button type="button" class="btn btn-xs btn-danger" ng-click="images.splice($index+1,1)">إلغاء</button> &nbsp;
+                <label >
+                    <input ng-model="items[$index+1].hasDescription" type="checkbox" />
+                    وصف الصورة
+                </label>
+                <br />
+                <div class="form-group" ng-show="items[$index+1].hasDescription" style="width: 41%">
+                    <textarea class="form-control" rows="3" name="description" data-ng-model="items[$index+1].description" placeholder="وصف" required></textarea>
+                </div>
+            </td>
+            <td ng-if="items[$index+2]" ng-switch-when="0">
+                <img alt="{{items[$index+2].title}}" ng-src="{{getImageUrl(items[$index+2].imageId,items[$index+2].encryptedImageId)}}" />
+                <br />
+                {{items[$index+2].title}}
+                <br />
+                <button type="button" class="btn btn-xs btn-danger" ng-click="images.splice($index+2,1)">إلغاء</button> &nbsp;
+                <label >
+                    <input ng-model="items[$index+2].hasDescription" type="checkbox" />
+                    وصف الصورة
+                </label>
+                <br />
+                <div class="form-group" ng-show="items[$index+2].hasDescription" style="width: 41%">
+                    <textarea class="form-control" rows="3" name="description" data-ng-model="items[$index+2].description" placeholder="وصف" required></textarea>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,31 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title">بيانات النقطة</h3>
+</div>
+<form role="form" name="formModal" novalidate ng-submit="ok()">
+    <div class="modal-body">
+        <div class="modal-group">
+            <label>عنوان النقطة</label>
+            <input type="text" name="title" class="form-control" placeholder="العنوان" data-ng-model="point.title" required>
+        </div>
+        <div class="modal-group">
+            <label>الوصف</label>
+            <textarea class="form-control" rows="5" name="body" data-ng-model="point.body" placeholder="الملخص" required></textarea>
+        </div>
+    <div class="modal-group">
+        <br/>
+        <images-selector images="point.images" title="'صور الخبر'">
+        </images-selector>
+    </div>
+    <div class="modal-group">
+        <br/>
+        <videos-selector videos="point.videos" title="'فيديوهات الخبر'">
+        </videos-selector>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" ng-disabled=" formModal.title.$invalid  || formModal.body.$invalid ">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            حفظ
+        </button>
+        <button class="btn btn-warning" ng-click="cancel()">عودة</button>
+    </div>
+</form>

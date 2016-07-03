@@ -1,0 +1,116 @@
+﻿<div ng-show="error" class="alert alert-danger alert-dismissible" role="alert"><p>{{ error }}</p></div>
+<div ng-show="success" class="alert alert-success alert-dismissible" role="alert">
+    <p>{{ success }}</p>
+</div>
+<form role="form" name="form" novalidate ng-init="bindData()" ng-submit="save()">
+    <div class="form-group pull-left">
+        <button type="button" class="btn btn-danger" ng-click="interview=$storage.interview" ng-show="!isEdit&&$storage.interview">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            أستعيد أخر مسودة
+        </button>
+        <button type="button" class="btn btn-success" ng-click="clear()" ng-show="interview.id">
+            إضافة جديد
+        </button>
+    </div>
+    <tabset>
+        <tab heading="البيانات الأساسية">
+            <div class="form-group" ng-class="{ 'has-error' : form.editor.$invalid }">
+                <label for="editor">المحرر</label>
+                <ui-select name="editor" ng-required="true" ng-model="interview.editor" theme="bootstrap">
+                    <ui-select-match placeholder="اختر المحرر من القائمة">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="item in editorList | filter: $select.search">
+                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : form.interviewee.$invalid }">
+                <label for="interviewee">الضيف</label>
+                <ui-select name="interviewee" ng-required="true" ng-model="interview.interviewee" theme="bootstrap">
+                    <ui-select-match placeholder="اختر الضيف من القائمة">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="item in intervieweeList | filter: $select.search">
+                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : form.title.$invalid }">
+                <label for="title">العنوان</label>
+                <input type="text" class="form-control" name="title" data-ng-model="interview.title" placeholder="العنوان" required>
+                <p ng-show="form.title.$invalid && form.title.$dirty" class="help-block">تأكد من قيمة العنوان.</p>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : form.summary.$invalid }">
+                <label for="summary">الملخص</label>
+                <textarea class="form-control" rows="5" name="summary" data-ng-model="interview.summary" placeholder="الملخص" required></textarea>
+                <p ng-show="form.summary.$invalid && form.summary.$dirty" class="help-block">تأكد من قيمة الملخص.</p>
+            </div>
+        </tab>
+        <tab heading="أسئلة المقابلة">
+            <div class="form-group">
+                <br />
+                <a href="javascript:" class="btn btn-success" ng-click="open(interview.points.length)">إضافة سؤال</a>
+                <table ng-table="" class="table table-striped" ng-show="interview.points.length">
+
+                    <thead>
+                        <tr>
+                            <th>السؤال</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody sv-root sv-part="interview.points">
+                        <tr ng-repeat="point in interview.points" sv-element>
+                            <td data-title="'السؤال'">
+                                {{point.question}}
+                            </td>
+                            <td>
+                                <a href="javascript:" ng-click="open($index)"><span class="glyphicon glyphicon-edit"></span> تعديل</a>
+                                <a data-ng-click="deletePoint($index)" ng-confirm-click="هل انت متأكد من الحذف؟" href="javascript:;"><span class="glyphicon glyphicon-trash"></span> حذف</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </tab>
+        <tab heading="صور المقابلة">
+            <div class="form-group">
+                <br />
+                <images-selector images="interview.images" title="'صور المقابلة'">
+                </images-selector>
+            </div>
+        </tab>
+        <tab heading="الأخبار المتعلقة بالمقابلة">
+            <div class="form-group">
+                <br />
+                <news-selector news="interview.relatedNews" title="'الأخبار المتعلقة بالمقابلة'">
+                </news-selector>
+            </div>
+        </tab>
+        <tab heading="الاقسام و الارتباطات">
+
+            <div class="form-group" ng-class="{ 'has-error' : form.parentCategory.$invalid }">
+                <label for="parentCategory">القسم العام</label>
+                <ui-select name="parentCategory" ng-required="true" ng-model="interview.parentCategory" theme="bootstrap">
+                    <ui-select-match placeholder="اختر القسم من القائمة">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="item in majorList | filter: $select.search">
+                        <div ng-bind-html="item.title | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : form.category.$invalid }">
+                <label for="category">القسم الرئيسي</label>
+                <ui-select name="category" ng-required="true" ng-model="interview.category" theme="bootstrap">
+                    <ui-select-match placeholder="اختر القسم من القائمة">{{$select.selected.title}}</ui-select-match>
+                    <ui-select-choices repeat="item in categoryList | filter: $select.search">
+                        <div ng-bind-html="item.title | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </tab>
+    </tabset>
+    <button type="submit" class="btn btn-primary" ng-disabled=" form.parentCategory.$invalid|| form.category.$invalid || form.title.$invalid || form.interviewee.$invalid || form.editor.$invalid || form.summary.$invalid|| !interview.points.length || !interview.images.length">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+        حفظ
+    </button>
+    <a href="#!/interviews" class="btn btn-warning">عودة</a>
+
+</form>
+

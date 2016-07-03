@@ -1,0 +1,22 @@
+﻿
+<div>
+    <a href="javascript:" class="btn btn-info" ng-click="openRelatedInterviews()">{{title}}</a>
+        <table ng-table="" class="table table-striped" ng-show="interviews.length">
+            <tbody sv-root sv-part="interviews">
+                <tr ng-repeat="item in interviews" sv-element>
+                    <td data-title="'م'" >
+                        {{$index+1}}
+                    </td>
+                    <td data-title="'العنون'" >
+                        {{item.title}}
+                    </td>
+                    <td data-title="'التاريخ'" >
+                        {{item.publishedOn |date:'yyyy-MM-dd'}}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-xs btn-danger" ng-click="interviews.splice($index,1)">إلغاء</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+ </div>

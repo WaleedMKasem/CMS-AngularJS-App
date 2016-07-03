@@ -1,0 +1,23 @@
+﻿
+    <div class="modal-header">
+        <h3 class="modal-title">بيانات السؤال</h3>
+    </div>
+    <form role="form" name="formModal" novalidate ng-submit="ok()">
+        <div class="modal-body">
+            <div class="modal-group">
+                <label>السؤال</label>
+                <input type="text" name="question" class="form-control" placeholder="السؤال" data-ng-model="point.question" required>
+            </div>
+            <div class="form-group">
+                <label>الإجابة</label>
+                <textarea name="answer" class=" form-control" rows="5" placeholder="الإجابة" data-ng-model="point.answer" required>></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" ng-disabled=" formModal.question.$invalid || formModal.answer.$invalid">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+                حفظ
+            </button>
+            <button class="btn btn-warning" ng-click="cancel()">عودة</button>
+        </div>
+    </form>

@@ -1,0 +1,23 @@
+﻿
+<div>
+    <a href="javascript:" class="btn btn-info" ng-click="openRelatedCaricatures()">{{title}}</a>
+    <table ng-table="" class="table table-striped" ng-show="caricatures.length">
+        <tbody sv-root sv-part="caricatures">
+            <tr ng-repeat="item in caricatures" sv-element>
+                <td data-title="'م'">
+                    {{$index+1}}
+                </td>
+                <td data-title="'العنون'">
+                    {{item.title}}
+                </td>
+                <td data-title="'التاريخ'">
+                    caricatures
+                    {{item.publishedOn |date:'yyyy-MM-dd'}}
+                </td>
+                <td>
+                    <!--<button type="button" class="btn btn-xs btn-danger" ng-click="caricatures.splice($index,1)">إلغاء</button>-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+ </div>

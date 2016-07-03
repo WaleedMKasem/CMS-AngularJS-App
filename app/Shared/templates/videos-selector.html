@@ -1,0 +1,31 @@
+﻿
+<div>
+    <a href="javascript:" class="btn btn-info" ng-click="openRelatedVideos()">{{title}}</a>
+
+    <table ng-table="" class="table" ng-show="videos.length">
+        <tr ng-repeat="item in videos as items" ng-switch on="$index % 3">
+            <td ng-switch-when="0">
+
+                <img alt="{{items[$index].video_title}}" ng-src="{{tvImgPath}}/145x140/{{items[$index].video_image}}" />
+                <br />
+                {{items[$index].video_title}}
+                <br />
+                <button  type="button" class="btn btn-xs btn-danger" ng-click="videos.splice($index,1)">إلغاء</button>
+            </td>
+            <td ng-if="items[$index+1]" ng-switch-when="0">
+                <img alt="{{items[$index+1].video_title}}" ng-src="{{tvImgPath}}/145x140/{{items[$index+1].video_image}}" />
+                <br />
+                {{items[$index+1].video_title}}
+                <br />
+                <button type="button" class="btn btn-xs btn-danger" ng-click="videos.splice($index+1,1)">إلغاء</button>
+            </td>
+            <td ng-if="items[$index+2]" ng-switch-when="0">
+                <img alt="{{items[$index+2].video_title}}" ng-src="{{tvImgPath}}/145x140/{{items[$index+2].video_image}}" />
+                <br />
+                {{items[$index+2].video_title}}
+                <br />
+                <button type="button" class="btn btn-xs btn-danger" ng-click="videos.splice($index+2,1)">إلغاء</button>
+            </td>
+        </tr>
+    </table>
+</div>

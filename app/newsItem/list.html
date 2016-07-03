@@ -1,0 +1,20 @@
+﻿<p>
+    <a href="#!/newsItem/create" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> إضافة جديد</a>
+</p>
+<table ng-table="tableParams" class="table table-striped" show-filter="true">
+    <tr ng-repeat="news in $data">
+        <td data-title="'م'" filter="{ 'newsItemId': 'text' }">
+            {{news.id}}
+        </td>
+        <td data-title="'العنون'" filter="{ 'title': 'text' }">
+            {{news.title}}
+        </td>
+        <td data-title="'التاريخ'" filter="{ 'publishedOn': 'text' }">
+            {{news.publishedOn |date:'yyyy-MM-dd'}}
+        </td>
+        <td>
+            <a href="#!/newsItem/edit/{{news.id}}"><span class="glyphicon glyphicon-edit"></span> تعديل</a>
+            <a data-ng-click="delete(news.id)" ng-confirm-click="هل انت متأكد من الحذف؟" href="javascript:;"><span class="glyphicon glyphicon-trash"></span> حذف</a>
+        </td>
+    </tr>
+</table>

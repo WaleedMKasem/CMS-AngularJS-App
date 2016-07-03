@@ -1,0 +1,22 @@
+﻿
+<div>
+    <a href="javascript:" class="btn btn-info" ng-click="openRelatedAlbums()">{{title}}</a>
+        <table ng-table="" class="table table-striped" ng-show="albums.length">
+            <tbody sv-root sv-part="albums">
+                <tr ng-repeat="item in albums" sv-element>
+                    <td data-title="'م'" >
+                        {{$index+1}}
+                    </td>
+                    <td data-title="'العنون'" >
+                        {{item.title}}
+                    </td>
+                    <td data-title="'التاريخ'" >
+                        {{item.publishedOn |date:'yyyy-MM-dd'}}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-xs btn-danger" ng-click="albums.splice($index,1)">إلغاء</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</div>
