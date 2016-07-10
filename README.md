@@ -1,1 +1,1 @@
-# CMS-AbgularJS-App
+# CMS application made by angularjs
